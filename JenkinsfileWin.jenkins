@@ -33,7 +33,7 @@ pipeline{
 					relativeTargetDir: '']], 
 					gitTool: 'Git_Centos', submoduleCfg: [], 
 					userRemoteConfigs: [[credentialsId: 'GitHub_juliancho923', url: 'https://github.com/JULIANCHO923/WithOpenClosed']]])									
-					bat 'gradle --b ${dir}/build.gradle clean'
+					bat 'gradle --b build.gradle clean'
 				echo "####################->End Checkout<-####################"
       		}
     	}
@@ -42,7 +42,7 @@ pipeline{
             steps{
                 echo "####################->Init Compile<-####################"
                 //sh './Java/PrincipiosSOLID/openClosed/WithOpenClose/ gradle clean'
-				bat 'gradle --b ${dir}/build.gradle compileJava'	
+				bat 'gradle --b build.gradle compileJava'	
 				echo "####################->End Compile<-####################"
             }
             
@@ -51,7 +51,7 @@ pipeline{
     	stage('Unit Tests') {      
       		 steps{        
         		echo "####################->Init Unit Tests<-####################"
-				bat 'gradle --b ${dir}/build.gradle test'	
+				bat 'gradle --b build.gradle test'	
 				echo "####################->End Unit Tests<-####################"
       		}   
     	}
@@ -76,7 +76,7 @@ pipeline{
   		stage('Build') {      
     		steps {
       			echo "####################->Init Build<-####################"      			
-      			bat 'gradle --b ${dir}/build.gradle build -x test'      			
+      			bat 'gradle --b build.gradle build -x test'      			
 				echo "####################->End Build<-####################"
     		}    
   		}
@@ -97,7 +97,7 @@ pipeline{
 		       }
             }
         }
-
+/*
 		stage("Deployment in testing environment") {
 			steps {
 				echo "####################->Init Deployment in testing environment<-####################"				
@@ -138,7 +138,7 @@ pipeline{
 	    			echo "####################->Unstable Deployment in testing environment<-####################"
 	  			}
 			}
-		} 
+		} */
 	}
 
 	post {    
