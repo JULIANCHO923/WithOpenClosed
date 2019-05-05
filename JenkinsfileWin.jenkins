@@ -58,9 +58,9 @@ pipeline{
     
     
     	stage('Static Code Analysis') {
- 			/*environment {				
-            	sonarScanner = "${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner"				
-        	}*/		
+ 		environment {				
+            		sonarScanner = "${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner"				
+        	}	
     		steps{
 		    	echo "####################->Init Static Code Analysis<-####################"  		
 		      	withSonarQubeEnv('Sonar') {
