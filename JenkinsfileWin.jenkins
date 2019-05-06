@@ -3,9 +3,9 @@ pipeline{
 		label 'Slave_Induccion' 		
 	}	
 	
-      //Opciones específicas de Pipeline dentro del Pipeline  
+      //Opciones especÃ­ficas de Pipeline dentro del Pipeline  
     options {		
-        //Mantener artefactos y salida de consola para el # específico de ejecuciones recientes del Pipeline.
+        //Mantener artefactos y salida de consola para el # especÃ­fico de ejecuciones recientes del Pipeline.
         buildDiscarder(logRotator(numToKeepStr: '3'))
         //No permitir ejecuciones concurrentes de Pipeline
         disableConcurrentBuilds()  		
@@ -22,7 +22,7 @@ pipeline{
         dir = "."				
     }
   
-    //Aquí comienzan los items del Pipeline  
+    //AquÃ­ comienzan los items del Pipeline  
     stages{
         stage('Checkout') {
             steps{
@@ -52,15 +52,17 @@ pipeline{
       		 steps{        
         		echo "####################->Init Unit Tests<-####################"
 				bat 'gradle --b build.gradle test'	
+				hygieiaTestPublishStep buildStatus: 'Success', testApplicationName: 'JULIAN_HENAO', testEnvironmentName: 'Dev', testFileNamePattern: '*.xml', testResultsDirectory: '/build/test-results/test', testType: 'Unit'
+				hygieiaTestPublishStep buildStatus: 'Success', testApplicationName: 'JULIAN_HENAO', testEnvironmentName: 'Dev', testFileNamePattern: '*.xml', testResultsDirectory: '/build/test-results/test', testType: 'Functional'
 				echo "####################->End Unit Tests<-####################"
       		}   
     	}
     
     
     	stage('Static Code Analysis') {
- 		environment {				
-            		sonarScanner = "${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner"				
-        	}	
+ 			/*environment {				
+            	sonarScanner = "${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner"				
+        	}*/		
     		steps{
 		    	echo "####################->Init Static Code Analysis<-####################"  		
 		      	withSonarQubeEnv('Sonar') {
@@ -80,7 +82,7 @@ pipeline{
 				echo "####################->End Build<-####################"
     		}    
   		}
-  		
+  		/*
   		stage('Publish') {       
 	        steps{
 		        echo "####################->Init Publish [Artifactory]<-####################"
@@ -88,7 +90,7 @@ pipeline{
 		            def server = Artifactory.server 'ar7if4c70ry@c318a'
 		            def uploadSpec = '''
 		            {"files": [{
-		                "pattern": "**/WithOpenClosed/build/libs/*.jar",
+		                "pattern": "build/libs/*.jar",
 		                "target": "libs-snapshot/CoachEPM/Java/PrincipiosSOLID/OpenClosed/build/"
 		                }]}'''
 	                def buildInfo = server.upload(uploadSpec)
@@ -96,7 +98,7 @@ pipeline{
 				echo "####################->End Publish [Artifactory]<-####################"
 		       }
             }
-        }
+        }*/
 /*
 		stage("Deployment in testing environment") {
 			steps {
@@ -144,8 +146,8 @@ pipeline{
 	post {    
 	  always {      
 		echo "####################->Init Post always<-####################"
-	    junit 'WithOpenClosed/build/test-results/test/*.xml'	  
-	    jacoco classPattern:'WithOpenClosed/build/classes/java', sourcePattern:'WithOpenClosed/src/main/java', execPattern:'WithOpenClosed/build/jacoco/*.exec' 
+	    junit '**/build/test-results/test/*.xml'	  
+	    jacoco classPattern:'**/build/classes/java', sourcePattern:'**/src/main/java', execPattern:'**/build/jacoco/*.exec' 
 		echo "####################->End Post always<-####################"
 	  }    
 	  failure {   	   
